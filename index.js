@@ -65,7 +65,7 @@ NOTE: This will be a callback function for the tasks below
 */
 
 function inning(/*Code Here*/){
-    /*Code Here*/
+  return Math.floor(Math.random() * Math.floor(3))
 }
 
 
@@ -83,9 +83,20 @@ Use the finalScore function below to do the following:
 }
 */ 
 
-function finalScore(/*Code Here*/){
-  /*Code Here*/
+function finalScore(inningCB, innings){
+  let homeTeamScore = 0;
+  let awayTeamScore = 0;
+
+  for(let i = 0; i < innings; i++) {
+    homeTeamScore = homeTeamScore + inningCB();
+    awayTeamScore = awayTeamScore + inningCB();
+  }
+  return {
+    Home: homeTeamScore,
+    Away: awayTeamScore
+  }
 }
+//console.log(finalScore(inning, 9));
 
 
 /* ⚾️⚾️⚾️ Task 4: getInningScore() ⚾️⚾️⚾️
@@ -101,9 +112,12 @@ For example: invoking getInningScore(inning) might return this object:
   */
 
 
-function getInningScore(/*Your Code Here */) {
-  /*Your Code Here */
-
+function getInningScore(inningCB) {
+  return {
+    Home: inningCB(),
+    Away: inningCB()
+  }
+  //console.log(getInningScore(inning));
 }
 
 
@@ -147,10 +161,27 @@ Use the scoreboard function below to do the following:
   "This game will require extra innings: Away 10 - Home 10"
 ] */
 // NOTE: There is no test associated with this code; if your output matches the given example, consider it complete!
-function scoreboard(/* CODE HERE */) {
-  /* CODE HERE */
-}
+function scoreboard(getInningScoreCB, inningCB,numOfInnings) {
+  const scoreOfInning = [];
+  let homeTeamScore = 0;
+  let awayTeamScore = 0;
 
+  for(let i = 0; i < numOfInnings; i++) {
+    const thisInning = getInningScoreCB(inningCB);
+    homeTeamScore = homeTeamScore + thisInning.Home
+    awayTeamScore = awayTeamScore + thisInning.Away
+
+    scoreOfInning.push(`Inning ${i + 1}: Away ${thisInning.Away} - Home ${thisInning.Home}`)
+  }
+  if(homeTeamScore === awayTeamScore){
+    scoreOfInning.push(`This game will require extra innings: Away ${thisInning.Away} - Home ${thisInning.Home}`)
+  } else {
+    scoreOfInning.push(`Final Score: Away: ${awayTeamScore} - Home: ${homeTeamScore}`);
+  }
+
+  return scoreOfInning;
+}
+console.log(scoreboard(getInningScore, inning, 9));
 
 
 
