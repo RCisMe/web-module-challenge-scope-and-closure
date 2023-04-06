@@ -30,11 +30,15 @@ console.log('example task:', processFirstItem(['foo','bar'],function(str){return
   Study the code for counter1 and counter2, then answer the questions below.
   
   1. What is the difference between counter1 and counter2?
-  
+    - counter1 variable is assigned the local function 'counter' that updates the local variable 'count' in the function 'counterMaker'.
+    - counter2 on the other hand is a function that updates the value of the variable 'count' located on the global scope.
   2. Which of the two uses a closure? How can you tell?
+    - counter1 uses closure because the function 'counterMaker' encloses a function named 'counter' that has access to the outer function's scope (counterMaker).
   
   3. In what scenario would the counter1 code be preferable? In what scenario would 
      counter2 be better?  
+     - counter1 would be preferable in situations where there's a need to use two variables starting at the same value but contains different values in the end depending on the number of times each variable is incremented.
+     - counter2 is preferable in scenarios where only one variable is needed to hold a value that keeps increasing ex.(the score of a team in a basketball game).
 */
 
 // counter1 code
@@ -65,7 +69,7 @@ NOTE: This will be a callback function for the tasks below
 */
 
 function inning(/*Code Here*/){
-  return Math.floor(Math.random() * Math.floor(3))
+    return Math.floor(Math.random() * 3);
 }
 
 
@@ -83,20 +87,20 @@ Use the finalScore function below to do the following:
 }
 */ 
 
-function finalScore(inningCB, innings){
-  let homeTeamScore = 0;
-  let awayTeamScore = 0;
-
-  for(let i = 0; i < innings; i++) {
-    homeTeamScore = homeTeamScore + inningCB();
-    awayTeamScore = awayTeamScore + inningCB();
+function finalScore(callBack, numOfInnings){
+  let home = 0;
+  let away = 0;
+  for(let i = 0; i < numOfInnings; i++) {
+    home += callBack();
+    away += callBack();
   }
   return {
-    Home: homeTeamScore,
-    Away: awayTeamScore
+    "Home": home,
+    "Away": away,
   }
 }
-//console.log(finalScore(inning, 9));
+console.log(finalScore(inning, 9));
+
 
 
 /* ⚾️⚾️⚾️ Task 4: getInningScore() ⚾️⚾️⚾️
@@ -112,13 +116,20 @@ For example: invoking getInningScore(inning) might return this object:
   */
 
 
-function getInningScore(inningCB) {
+function getInningScore(callBack) {
+  let home = 0;
+  let away = 0;
+
+  home += callBack();
+  away += callBack();
+
   return {
-    Home: inningCB(),
-    Away: inningCB()
+    "Home": home,
+    "Away": away,
   }
-  //console.log(getInningScore(inning));
 }
+
+console.log(getInningScore(inning));
 
 
 /* STRETCH: ⚾️⚾️⚾️ Task 5: scoreboard() ⚾️⚾️⚾️
@@ -161,27 +172,24 @@ Use the scoreboard function below to do the following:
   "This game will require extra innings: Away 10 - Home 10"
 ] */
 // NOTE: There is no test associated with this code; if your output matches the given example, consider it complete!
-function scoreboard(getInningScoreCB, inningCB,numOfInnings) {
-  const scoreOfInning = [];
-  let homeTeamScore = 0;
-  let awayTeamScore = 0;
-
+function scoreboard(callBack, callBack2, numOfInnings) {
+  const arr =[];
+  let home = 0;
+  let away = 0;
+  
   for(let i = 0; i < numOfInnings; i++) {
-    const thisInning = getInningScoreCB(inningCB);
-    homeTeamScore = homeTeamScore + thisInning.Home
-    awayTeamScore = awayTeamScore + thisInning.Away
+    const inningScore = callBack(callBack2);
+    home += inningScore['Home'];
+    away += inningScore['Away'];
+    arr.push(`Inning ${i + 1}: Away ${inningScore['Away']} - Home ${inningScore['Home']}`)
+  };
 
-    scoreOfInning.push(`Inning ${i + 1}: Away ${thisInning.Away} - Home ${thisInning.Home}`)
-  }
-  if(homeTeamScore === awayTeamScore){
-    scoreOfInning.push(`This game will require extra innings: Away ${thisInning.Away} - Home ${thisInning.Home}`)
-  } else {
-    scoreOfInning.push(`Final Score: Away: ${awayTeamScore} - Home: ${homeTeamScore}`);
-  }
-
-  return scoreOfInning;
+  arr.push(`Final Score: Away ${away} - Home ${home}`);
+  return arr;
 }
-console.log(scoreboard(getInningScore, inning, 9));
+const arr = scoreboard(getInningScore, inning, 9);
+console.log(arr);
+
 
 
 
